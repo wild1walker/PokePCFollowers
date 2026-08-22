@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.4 - 2026-08-22
+
+### Fixed
+- Follower no longer disappears entirely when the party lead is fainted. The
+  sandbox spawn-gate shim spoofed the species of party slot 1 but not its HP,
+  so the engine's native `shouldSpawn` test (species == PIKACHU *and* hp > 0)
+  failed on a 0 HP lead and no other slot carried the spoofed species. The
+  shim now borrows the selected follower's own slot, falling back to any
+  healthy slot, so both halves of the native test are satisfied by the same
+  mon. A fully fainted party still correctly spawns no follower.
+
 ## 0.8.2 - 2026-08-14
 
 ### Changed

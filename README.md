@@ -76,6 +76,16 @@ Yellow-only Oak story/encounter overrides remain restricted to Yellow and are no
 
 PokePC targets the Gen 2 engine directly. It uses Gold's follower spawn seam, native 251-species Pokédex, Gen 2 sprite registry, and split icon sheet/species registry. Followers are hidden correctly while biking or surfing, and the Party Menu `FOLLOWER` action uses the same shared hook as Gen 1.
 
+## Fainted lead fix (0.8.4)
+
+Under the 0.1.86+ sandbox the follower vanished entirely whenever party slot 1
+was at 0 HP, even with a different healthy Pokémon selected as the follower.
+The native Gen 1 spawn gate scans the party for a mon that is both named
+`PIKACHU` and above 0 HP; the compatibility shim spoofed slot 1's species but
+not its HP, so a fainted lead failed the gate and no other slot matched. The
+shim now borrows the selected follower's own slot instead, so both halves of
+the native test are satisfied by the same mon without mutating any HP value.
+
 ## Animation fix
 
 The follower sprite definition is explicitly marked as a walking sprite (`walker=true`). Gen1Recomp uses this flag to provide the `walkPhase` state used by the 6-frame overworld sheets, so the follower switches between standing and walking frames correctly.

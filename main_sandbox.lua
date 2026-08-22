@@ -70,7 +70,34 @@ return function(mod)
         local oldRival = flags.EVENT_BATTLED_RIVAL_IN_OAKS_LAB
         local oldInBall = save.pikachuInBall
         local party = type(save.party) == "table" and save.party or {}
-        local mon = party[1]
+        -- Native Gen 1 shouldSpawn scans the whole party for a mon that is
+        -- both named PIKACHU *and* has hp > 0. Spoofing slot 1 uncondition-
+        -- ally fails that test whenever the lead is fainted, even though the
+        -- follower PokePC selected is a different, healthy mon -- and no
+        -- other slot carries the spoofed species, so the gate returns false
+        -- and no follower spawns at all. Borrow the follower's own slot (or
+        -- failing that any healthy slot) so the species and hp halves of the
+        -- native test are satisfied by the same mon.
+        local mon
+        local okStarter, starter = pcall(PikachuFollower.starterInParty, save, true)
+        if okStarter and type(starter) == "table"
+            and (tonumber(starter.hp) or 0) > 0 then
+          for _, candidate in ipairs(party) do
+            if candidate == starter then
+              mon = candidate
+              break
+            end
+          end
+        end
+        if not mon then
+          for _, candidate in ipairs(party) do
+            if type(candidate) == "table" and (tonumber(candidate.hp) or 0) > 0 then
+              mon = candidate
+              break
+            end
+          end
+        end
+        mon = mon or party[1]
         local oldSpecies = mon and mon.species or nil
         local oldIsYellow = GameVersion.isYellow
 
