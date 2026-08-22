@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.8.6 - 2026-08-22
+
+### Fixed
+- A fainted Pokemon is no longer drawn as the overworld follower. The spawn
+  gate already required a healthy mon, but `SpriteRenderer.resolveImage` and
+  `SpriteRenderer.draw` resolved the follower with `needHealthy = false`, so a
+  stored selection that had since fainted was still rendered. The renderer,
+  the party-menu resync check and the follower-size handler now all resolve
+  healthy-only, matching `shouldSpawn`.
+- While the chosen follower is fainted, the first healthy party member follows
+  instead. The stored selection is preserved, so the original follower resumes
+  as soon as it is revived.
+
 ## 0.8.5 - 2026-08-22
 
 ### Changed

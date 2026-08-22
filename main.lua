@@ -552,7 +552,11 @@ return function(mod)
   local wrappedResolveImage
   wrappedResolveImage = function(self, ...)
     if self and self.def and self.def.id == SPRITE_ID then
-      local activeMon = getActiveFollowerMon(liveGame(), false)
+      -- Healthy-only, to match shouldSpawn. Resolving with needHealthy=false
+      -- honours a stored selection that has since fainted, which drew a 0 HP
+      -- mon walking behind the player. The selection itself is kept, so the
+      -- mon resumes following once it is revived.
+      local activeMon = getActiveFollowerMon(liveGame(), true)
       if activeMon then
         return getFollowerImage(activeMon.species)
       end
@@ -565,7 +569,10 @@ return function(mod)
   local wrappedSpriteDraw
   wrappedSpriteDraw = function(self, px, py, camX, camY, facing, walkPhase, stepFlip)
     if self and self.def and self.def.id == SPRITE_ID then
-      local activeMon = getActiveFollowerMon(liveGame(), false)
+      -- Healthy-only: a fainted follower must not be drawn. With no healthy
+      -- party mon at all there is nothing to draw and shouldSpawn is already
+      -- false, so returning here simply leaves the tile empty.
+      local activeMon = getActiveFollowerMon(liveGame(), true)
       if not activeMon then return end
       local followerImg = getFollowerImage(activeMon.species)
 
@@ -828,7 +835,7 @@ return function(mod)
     if not game or not ow then return end
     local follower = PikachuFollower.current(ow)
     if not follower then return end
-    local active = getActiveFollowerMon(game, false)
+    local active = getActiveFollowerMon(game, true)
     if not active then return end
     if follower._pokepcFollowerSpecies ~= active.species then
       syncLiveFollowerDef(game, ow)
@@ -1000,7 +1007,7 @@ return function(mod)
         return
       end
       local game = liveGame()
-      local mon = getActiveFollowerMon(game, false)
+      local mon = getActiveFollowerMon(game, true)
       if mon then configureSpriteDef(game, mon) end
       pcall(syncLiveFollowerDef, game, worldFor(game))
       installFollowerVoxelSizeHook()

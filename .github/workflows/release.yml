@@ -42,7 +42,7 @@ jobs:
           python3 - <<'PY'
           import json
           m = json.load(open('manifest.json', encoding='utf-8'))
-          assert m['version'] == '0.8.5', m['version']
+          assert m['version'] == '0.8.6', m['version']
           assert m['entry'] == 'main_sandbox.lua', m['entry']
           assert m.get('game_version') == '0.0.0-dev || >=0.1.86 <2.0.0'
           permissions = set(m.get('permissions') or [])
@@ -80,6 +80,13 @@ jobs:
           grep -q -F 'PikachuFollower.setShouldSpawn' main_sandbox.lua
           grep -q -F 'resolveFollowerSprite' main_sandbox.lua
           grep -q -F 'providerRepository' main_sandbox.lua
+
+          # The follower renderer must never resolve an unhealthy mon, or a
+          # fainted stored selection is drawn walking behind the player.
+          if grep -n -F 'getActiveFollowerMon(liveGame(), false)' main.lua; then
+            echo "render path resolves a possibly fainted follower" >&2
+            exit 1
+          fi
 
       - name: Build launcher archive
         shell: bash
