@@ -165,3 +165,28 @@ jobs:
               --notes-file /tmp/release-notes.md \
               --latest
           fi
+
+      - name: Prune stale release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+          ARCHIVE: ${{ steps.version.outputs.archive }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Renaming the mod id changes the archive name, so an earlier build's
+          # zip stays attached to the tag under its old name. A mod index that
+          # substring-matches the id against asset names can then resolve that
+          # stale archive in preference to this one, serving an old build. The
+          # release should hold exactly what this run produced, so drop
+          # everything else on the tag.
+          gh release view "$TAG" --json assets --jq '.assets[].name' > /tmp/assets.txt
+          while IFS= read -r name; do
+            [ -n "$name" ] || continue
+            if [ "$name" != "$ARCHIVE" ]; then
+              echo "removing stale asset: $name"
+              gh release delete-asset "$TAG" "$name" --yes
+            fi
+          done < /tmp/assets.txt
+          echo "assets now on $TAG:"
+          gh release view "$TAG" --json assets --jq '.assets[] | "  \(.name)  \(.size) bytes"'
