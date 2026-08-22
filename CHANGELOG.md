@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.5 - 2026-08-22
+
+### Changed
+- Shorten the party submenu follower labels so they fit the submenu box. The
+  active follower now reads `FOLLOWER` (8 characters) instead of the
+  9-character label that had its final glyph clipped by the window border, and
+  every other party member reads `FOLLOW?` (7 characters).
+
 ## 0.8.4 - 2026-08-22
 
 ### Fixed

@@ -12,7 +12,7 @@ An all-species overworld follower mod for **Pokémon Red, Blue, Yellow, and Gold
 * **Party Menu UI Selection**:
   1. Press `START` -> select `POKéMON`.
   2. Choose any Pokémon in your party.
-  3. Select the new **`FOLLOWER`** option.
+  3. Select the new **`FOLLOW?`** option (the current follower reads **`FOLLOWER`**).
   4. Your chosen Pokémon will instantly become your active follower!
 * **Full-Color Overworld Graphics**: Sprites render with rich true-color graphics directly over 100% colorized overworld terrain tiles (grass, paths, dirt, water) with zero background artifacts.
 * **Pokédex-Proportional Sizes**: Followers use the height recorded in their Pokédex entry. A progressive and capped scale keeps the smallest Pokémon at least 11 px tall while making very large Pokémon clearly more imposing, without changing collision or movement.
@@ -64,7 +64,7 @@ The follower sprite is also marked `trueColor` for render-pipeline use so the vo
 
 Version 0.8.2 keeps its renderer, party-menu, follower and Yellow encounter wrappers chain-safe. During a hot reload it restores a function only when its own wrapper is still the active outermost function, so wrappers installed by later-loading mods are not overwritten. This is intended for stacks containing Dramatic Sky Ride, Kanto Dive or the standalone Dramatic Deep Dive; those mods remain responsible for their own mount and underwater movement rules.
 
-When [Unique Menu Icons](https://github.com/menyas/unique-menu-icons) is also enabled, it owns the party-menu icon column and its color mode. PokePC keeps providing the overworld follower and the `FOLLOWER` action, but stops marking the party rows as true color. Without Unique Menu Icons, PokePC's own party icons remain the fallback. Use Unique Menu Icons 1.5.0 or newer; version 1.4.0 declares PokePC incompatible in its manifest.
+When [Unique Menu Icons](https://github.com/menyas/unique-menu-icons) is also enabled, it owns the party-menu icon column and its color mode. PokePC keeps providing the overworld follower and the `FOLLOW?` action, but stops marking the party rows as true color. Without Unique Menu Icons, PokePC's own party icons remain the fallback. Use Unique Menu Icons 1.5.0 or newer; version 1.4.0 declares PokePC incompatible in its manifest.
 
 ## Red/Blue follower support
 
@@ -74,7 +74,7 @@ Yellow-only Oak story/encounter overrides remain restricted to Yellow and are no
 
 ## Gold support
 
-PokePC targets the Gen 2 engine directly. It uses Gold's follower spawn seam, native 251-species Pokédex, Gen 2 sprite registry, and split icon sheet/species registry. Followers are hidden correctly while biking or surfing, and the Party Menu `FOLLOWER` action uses the same shared hook as Gen 1.
+PokePC targets the Gen 2 engine directly. It uses Gold's follower spawn seam, native 251-species Pokédex, Gen 2 sprite registry, and split icon sheet/species registry. Followers are hidden correctly while biking or surfing, and the Party Menu `FOLLOW?` action uses the same shared hook as Gen 1.
 
 ## Fainted lead fix (0.8.4)
 

@@ -42,7 +42,7 @@ jobs:
           python3 - <<'PY'
           import json
           m = json.load(open('manifest.json', encoding='utf-8'))
-          assert m['version'] == '0.8.4', m['version']
+          assert m['version'] == '0.8.5', m['version']
           assert m['entry'] == 'main_sandbox.lua', m['entry']
           assert m.get('game_version') == '0.0.0-dev || >=0.1.86 <2.0.0'
           permissions = set(m.get('permissions') or [])

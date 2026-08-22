@@ -836,7 +836,7 @@ return function(mod)
   end
 
   -- ----------------------------------------------------------------------
-  -- 11. Party submenu hook (FOLLOWER / FOLLOWING)
+  -- 11. Party submenu hook (FOLLOW? / FOLLOWER)
   -- ----------------------------------------------------------------------
   local function selectFollower(mon, game, quiet)
     if not (mon and game and healthy(mon)) then return false end
@@ -874,7 +874,10 @@ return function(mod)
         return out
       end
       local active = getActiveFollowerMon(game, true)
-      local label = Strings(active == mon and "FOLLOWING" or "FOLLOWER")
+      -- The submenu box clips at 8 characters, so the old 9-character
+      -- active-follower label lost its final glyph. FOLLOWER (8) now marks
+      -- the active follower and FOLLOW? (7) prompts on every other member.
+      local label = Strings(active == mon and "FOLLOWER" or "FOLLOW?")
       out[#out + 1] = {
         label = label,
         onSelect = function(selected, selectedGame)
@@ -892,7 +895,7 @@ return function(mod)
       if not healthy(e.mon) then return end
       local active = getActiveFollowerMon(e.game, true)
       local isCurrent = (active == e.mon)
-      local label = Strings(isCurrent and "FOLLOWING" or "FOLLOWER")
+      local label = Strings(isCurrent and "FOLLOWER" or "FOLLOW?")
       table.insert(e.items, {
         label = label,
         onSelect = function(selectedMon, game)
